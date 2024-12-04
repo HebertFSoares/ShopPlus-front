@@ -1,19 +1,19 @@
 import Hero from '../components/Hero'
-import LatestComponent from '../components/LatestComponent'
-import BestSeller from '../components/BestSeller'
-import OurPolicy from '../components/OurPolicy'
 import Categories from '../components/Categories'
-// import NewsLetterBox from '../components/NewsLetterBox'
+import LatestComponent from '../components/LatestComponent'
+// import BestSeller from '../components/BestSeller' // Caso queira incluir mais tarde
+// import OurPolicy from '../components/OurPolicy' // Caso queira incluir mais tarde
+
 const Home = () => {
   return (
     <div>
-      <Hero/>
+      <Hero />
       <Categories />
-      <LatestComponent/>
-      <BestSeller/>
-      <OurPolicy/>
+      <LatestComponent />
+      {/* <BestSeller /> */}
+      {/* <OurPolicy /> */}
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

@@ -17,7 +17,16 @@ function SignInForm() {
     const token = localStorage.getItem("token");
     if (token) {
       // Se houver token, redireciona para a página principal
-      navigate("/home"); // Ajuste o caminho de acordo com sua necessidade
+      navigate("/"); // Ajuste o caminho de acordo com sua necessidade
+    }
+
+    // Preenche o campo de email se houver um e-mail armazenado no localStorage
+    const storedEmail = localStorage.getItem("email");
+    if (storedEmail) {
+      setState((prevState) => ({
+        ...prevState,
+        email: storedEmail,
+      }));
     }
   }, [navigate]);
 
@@ -50,11 +59,14 @@ function SignInForm() {
       const data = await response.json();
       localStorage.setItem("token", data.token);
 
+      // Armazena o e-mail no localStorage para uso futuro
+      localStorage.setItem("email", email);
+
       alert("Login bem-sucedido!");
       console.log("Token armazenado com sucesso:", data.token);
 
       // Redireciona para a página principal após o login
-      navigate("/home"); // Ajuste o caminho de acordo com sua necessidade
+      navigate("/"); // Ajuste o caminho de acordo com sua necessidade
 
       setState({
         email: "",

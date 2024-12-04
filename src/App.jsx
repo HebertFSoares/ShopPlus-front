@@ -21,7 +21,7 @@ const App = () => {
   const hideNavBarPages = ['/login', '/sign-up', '/otp']; // Adicione a rota '/otp' para ocultar o NavBar
 
   return (
-    <div className='px-4'>
+    <div>
       <ToastContainer />
       {/* Condicional para renderizar o NavBar apenas se não estiver nas páginas de login */}
       {!hideNavBarPages.includes(location.pathname) && <NavBar />}

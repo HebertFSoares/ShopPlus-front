@@ -10,6 +10,7 @@ const ShopContextProvider = (props) => {
   const [showSearch, setShowSearch] = useState(false);
   const [cartItems, setCartItems] = useState({});
   const [products, setProducts] = useState([]); // Novo estado para os produtos do backend
+  const [cartUpdated, setCartUpdated] = useState(false); // Estado para saber se o carrinho foi atualizado
 
   // Carregar os produtos do backend
   const fetchProducts = async () => {
@@ -27,22 +28,19 @@ const ShopContextProvider = (props) => {
       toast.error("Select Product Size");
       return;
     }
-  
+
     // Clonando o estado atual do carrinho
     let cartData = structuredClone(cartItems);
-  
+
     // Encontrar o produto pelo ID
     const product = products.find((item) => item._id === itemId);
-  
+
     // Verificar se o produto foi encontrado
     if (!product) {
       console.log("Produto não encontrado", itemId);
       return;
     }
-  
-    // Log dos dados do produto
-    console.log("Produto encontrado:", product);
-  
+
     // Se o item já existe no carrinho
     if (cartData[itemId]) {
       // Se o tamanho já existe, incrementa a quantidade
@@ -60,14 +58,17 @@ const ShopContextProvider = (props) => {
       cartData[itemId][size] = 1;
       console.log(`Produto ${product.nome} adicionado ao carrinho com tamanho ${size}`);
     }
-  
+
     // Atualiza o estado do carrinho
     setCartItems(cartData);
-  
+
+    // Altera o estado de cartUpdated para true e volta para false depois de 1 segundo
+    setCartUpdated(true);
+    setTimeout(() => setCartUpdated(false), 1000);
+
     // Log do carrinho atualizado
     console.log("Carrinho atualizado:", cartData);
   };
-  
 
   const getCartCount = () => {
     let totalCount = 0;
@@ -113,6 +114,7 @@ const ShopContextProvider = (props) => {
     getCartCount,
     updateQuantity,
     getCartAmount,
+    cartUpdated, // Passando o estado cartUpdated
   };
 
   return <ShopContext.Provider value={value}>{props.children}</ShopContext.Provider>;

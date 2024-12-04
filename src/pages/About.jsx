@@ -71,9 +71,12 @@ const About = () => {
         </motion.div>
 
         {/* Seção Por Que Escolher-nos */}
-        <div className="text-4xl py-4">
-          <Title text1={"POR QUE"} text2={"ESCOLHER-NOS"} />
-        </div>
+        <div className="text-center mb-8">
+        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800">
+          <span className="text-purple-600">POR QUE</span> ESCOLHER-NOS
+        </h2>
+        <div className="mt-4 border-t-2 border-purple-600 w-16 mx-auto"></div>
+      </div>
 
         <motion.div
           className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20"
@@ -107,9 +110,12 @@ const About = () => {
         </motion.div>
 
         {/* Seção Nossos Valores */}
-        <div className="text-4xl py-4">
-          <Title text1={"NOSSOS"} text2={"VALORES"} />
-        </div>
+        <div className="text-center mb-8">
+        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800">
+          <span className="text-purple-600">NOSSOS</span> VALORES
+        </h2>
+        <div className="mt-4 border-t-2 border-purple-600 w-16 mx-auto"></div>
+      </div>
 
         {/* Incluímos a seção de valores já ajustada */}
         <motion.div
@@ -137,35 +143,6 @@ const About = () => {
             </p>
           </div>
         </motion.div>
-
-      {/* Seção de Produtos */}
-      <div className='text-4xl py-4'>
-        <Title text1={'NOSSOS'} text2={'PRODUTOS'} />
-      </div>
-  
-      {/* Exibição de Imagens de Produtos */}
-      <motion.div
-        className='flex flex-wrap justify-center gap-8 mb-20'
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 0.7 }}
-      >
-        <img
-          src="https://s.alicdn.com/@sc04/kf/H33c179f41bcd42b7814510dcabd6c913R.jpg_720x720q50.jpg"
-          alt="Produto 1"
-          className="w-[300px] h-[300px] object-cover rounded-lg shadow-lg"
-        />
-        <img
-          src="https://5.imimg.com/data5/IY/LM/MY-26694604/boy-fancy-garment-500x500.jpg"
-          alt="Produto 2"
-          className="w-[300px] h-[300px] object-cover rounded-lg shadow-lg"
-        />
-        <img
-          src="https://2.imimg.com/data2/LG/VI/MY-3760883/jacket-denim.jpg"
-          alt="Produto 3"
-          className="w-[300px] h-[300px] object-cover rounded-lg shadow-lg"
-        />
-      </motion.div>
   
       {/* Seção de Testemunhos de Clientes */}
       <motion.div
@@ -174,8 +151,15 @@ const About = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1 }}
       >
-        <Title text1={'O QUE'} text2={'NOSSOS CLIENTES DIZEM'} />
+        <div className="text-center mb-8">
+        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800">
+          <span className="text-purple-600">O QUE NOSSOS</span> CLIENTES DIZEM
+        </h2>
+        <div className="mt-4 border-t-2 border-purple-600 w-16 mx-auto"></div>
+      </div>
       </motion.div>
+
+      
   
       {/* Lista de Testemunhos */}
       <div className='flex justify-center mb-10'>
@@ -198,7 +182,7 @@ const About = () => {
       <div className='flex justify-center'>
         <button
           onClick={() => setShowMore(!showMore)}
-          className='px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all'
+          className='px-6 py-2 bg-purple-600 text-white rounded-full hover:bg-blue-700 transition-all'
         >
           {showMore ? 'Mostrar Menos' : 'Ver Mais'}
         </button>

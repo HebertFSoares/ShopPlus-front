@@ -1,12 +1,10 @@
 import { useContext, useEffect, useState } from 'react';
 import { ShopContext } from '../context/ShopContext';
+import { Link } from 'react-router-dom'; // Importando Link do react-router-dom
 import Title from '../components/Title';
-import ProductItem from '../components/ProductItem';
 
 const Collection = () => {
   const [collectionItems, setCollectionItems] = useState([]);
-  const [category, setCategory] = useState([]);
-  const [subCategory, setSubCategory] = useState([]);
   const [sortType, setSortType] = useState('a');
   const [loading, setLoading] = useState(true); // Estado de carregamento
   const [error, setError] = useState(null); // Estado de erro
@@ -28,34 +26,18 @@ const Collection = () => {
     }
   };
 
-  // Função para aplicar filtros
-  const applyFilter = () => {
-    let productCopy = [...collectionItems];
-
-    if (category.length > 0)
-      productCopy = productCopy.filter((item) => category.includes(item.category));
-
-    if (subCategory.length > 0)
-      productCopy = productCopy.filter((item) => subCategory.includes(item.subCategory));
-
-    if (showSearch && search)
-      productCopy = productCopy.filter((item) => item.name.toLowerCase().includes(search));
-
-    setCollectionItems(productCopy);
-  };
-
   // Função para ordenar os produtos
   const sortProduct = () => {
     let fpCopy = collectionItems.slice(); // Cria uma cópia da lista de produtos
     switch (sortType) {
       case 'low-high':
-        setCollectionItems(fpCopy.sort((a, b) => a.price - b.price));
+        setCollectionItems(fpCopy.sort((a, b) => a.preco - b.preco));
         break;
       case 'high-low':
-        setCollectionItems(fpCopy.sort((a, b) => b.price - a.price));
+        setCollectionItems(fpCopy.sort((a, b) => b.preco - a.preco));
         break;
       default:
-        applyFilter();
+        setCollectionItems(fpCopy); // Caso sem ordenação, apenas mantemos a lista original
     }
   };
 
@@ -65,89 +47,58 @@ const Collection = () => {
   }, []);
 
   useEffect(() => {
-    applyFilter(); // Aplica os filtros sempre que as categorias ou o termo de busca mudarem
-  }, [category, subCategory, search, showSearch]);
-
-  useEffect(() => {
     sortProduct(); // Ordena os produtos sempre que o tipo de ordenação mudar
   }, [sortType]);
 
-  const toggleCategory = (e) => {
-    const value = e.target.value;
-    setCategory((prevState) =>
-      prevState.includes(value)
-        ? prevState.filter((cat) => cat !== value)
-        : [...prevState, value]
-    );
-  };
-
-  const toggleSubCategory = (e) => {
-    const value = e.target.value;
-    setSubCategory((prevState) =>
-      prevState.includes(value)
-        ? prevState.filter((subCat) => subCat !== value)
-        : [...prevState, value]
-    );
-  };
-
   return (
-    <div className="flex gap-28 pt-10 border-t">
-      {/* Filtros */}
-      <div className="w-16"> {/* Diminuí a largura para 1/6 para ficar mais fino e encolhido à direita */}
-        <p className="text-xl font-semibold mb-4">Filtros</p>
-        <div className="border-b pb-4 mb-6">
-          <p className="text-sm font-medium mb-2">Categorias</p>
-          <div className="space-y-2">
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                value="Eletronicos"
-                onChange={toggleCategory}
-                className="mr-2"
-              />
-              <span className="text-sm">Eletrônicos</span>
-            </div>
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                value="Roupas"
-                onChange={toggleCategory}
-                className="mr-2"
-              />
-              <span className="text-sm">Roupas</span>
-            </div>
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                value="Outros"
-                onChange={toggleCategory}
-                className="mr-2"
-              />
-              <span className="text-sm">Outros</span>
-            </div>
-          </div>
-        </div>
+    <div className="py-12 bg-gray-100">
+      {/* Título da página */}
+      <div className="text-center mb-10">
+        <Title text1="Todos" text2="Produtos" />
       </div>
 
-      {/* Produtos */}
-      <div className="flex-1">
-        <div className="flex justify-between items-center mb-4">
-          <Title text1={"Todos"} text2={"Produtos"} />
-        </div>
-
-        {/* Exibe mensagem de erro ou carregamento */}
-        {loading ? (
-          <p>Carregando...</p>
-        ) : error ? (
-          <p className="text-red-500">{error}</p>
-        ) : (
-          <div className="grid grid-cols-4 gap-4">
-            {collectionItems.map((item) => (
-              <ProductItem key={item._id} item={item} />
-            ))}
-          </div>
-        )}
+      {/* Barra de Ordenação */}
+      <div className="flex justify-between items-center mb-6 max-w-7xl mx-auto px-4">
+        <p className="text-lg font-medium text-gray-800">Ordenar por:</p>
+        <select
+          onChange={(e) => setSortType(e.target.value)}
+          className="px-4 py-2 border rounded-md shadow-md text-purple-600 bg-white focus:outline-none"
+        >
+          <option value="a">Selecione</option>
+          <option value="low-high">Preço: Menor para Maior</option>
+          <option value="high-low">Preço: Maior para Menor</option>
+        </select>
       </div>
+
+      {/* Exibe mensagem de erro ou carregamento */}
+      {loading ? (
+        <div className="text-center text-gray-500">Carregando...</div>
+      ) : error ? (
+        <div className="text-center text-red-500">{error}</div>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-8 max-w-7xl mx-auto px-4">
+          {collectionItems.map((item) => (
+            <Link
+              key={item._id} // Utilizando o _id como key para o Link
+              to={`/product/${item._id}`} // Rota para a página do produto
+              className="bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden transform hover:scale-105 transition duration-300 ease-in-out p-6"
+            >
+              <img
+                src={item.foto}
+                alt={item.nome}
+                className="w-full h-72 sm:h-80 md:h-96 lg:h-96 xl:h-96 object-cover rounded-lg"
+              />
+              <div className="mt-6">
+                <h3 className="text-lg font-semibold text-gray-800 truncate">{item.nome}</h3>
+                <p className="text-sm text-gray-500 mb-2">{item.categoria}</p>
+                <div className="flex items-center justify-between">
+                  <p className="text-lg font-semibold text-gray-900">R$ {item.preco.toFixed(2)}</p>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -1,37 +1,81 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom'; // Para acessar o estado passado via navegação
-import Title from '../components/Title';
+import { useLocation, useNavigate } from 'react-router-dom';
 import CartTotal from '../components/CartTotal';
+import QRCode from 'react-qr-code';
 
 const PlaceOrder = () => {
-  const { state } = useLocation(); // Obtém o estado passado na navegação
-  const { produtos, total, pedidoId, email } = state || {}; // Desestruturar os dados do pedido (produtos e total)
+  const { state } = useLocation();
+  const { produtos, total, pedidoId, email } = state || {};
 
   const [method, setMethod] = useState('cod');
-  const [payerEmail, setPayerEmail] = useState('');
+  const [payerEmail, setPayerEmail] = useState(email || '');
   const [orderId, setOrderId] = useState('');
+  const [userData, setUserData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    address: '',
+    city: '',
+    state: '',
+    zipcode: '',
+    country: '',
+    phone: '',
+  });
+  const [qrCodeData, setQrCodeData] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // Função para formatar valores em reais (R$)
-  const formatCurrency = (value) => {
-    return `R$ ${value.toFixed(2).replace('.', ',')}`;
-  };
+  const navigate = useNavigate();
+
+  const formatCurrency = (value) => `R$ ${value.toFixed(2).replace('.', ',')}`;
 
   useEffect(() => {
     if (!produtos || produtos.length === 0) {
-      // Caso não haja dados ou produtos, redirecionar ou exibir um alerta
       alert('Nenhum produto encontrado no pedido.');
     }
-    
-    // Log para verificar quais dados chegaram na navegação
-    console.log("Estado passado para PlaceOrder:", state);
-
     if (pedidoId) {
       setOrderId(pedidoId);
     }
-    if (email) {
-      setPayerEmail(email);
-    }
-  }, [produtos, state]);
+
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          alert('Você precisa estar logado para finalizar a compra.');
+          return;
+        }
+
+        const response = await fetch('http://localhost:8080/api/cliente', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setUserData({
+            firstName: data.firstName || '',
+            lastName: data.lastName || '',
+            email: data.email || '',
+            address: data.address || '',
+            city: data.city || '',
+            state: data.state || '',
+            zipcode: data.zipcode || '',
+            country: data.country || '',
+            phone: data.phone || '',
+          });
+
+          setPayerEmail(data.email || '');
+        } else {
+          alert('Erro ao buscar dados do cliente.');
+        }
+      } catch (error) {
+        alert('Houve um erro ao carregar os dados do cliente.');
+      }
+    };
+
+    fetchUserData();
+  }, [produtos, pedidoId]);
 
   const handlePlaceOrder = async () => {
     if (!orderId) {
@@ -39,12 +83,13 @@ const PlaceOrder = () => {
       return;
     }
 
-    // Verifica se o pedidoId é um ObjectId válido
     const isValidObjectId = /^[0-9a-fA-F]{24}$/.test(orderId);
     if (!isValidObjectId) {
       alert('ID do pedido inválido.');
       return;
     }
+
+    setLoading(true);
 
     if (method === 'pix') {
       try {
@@ -55,155 +100,128 @@ const PlaceOrder = () => {
         }
 
         const requestBody = {
-          pedidoId: orderId,  // Assegura que o pedidoId seja válido
-          payerEmail: payerEmail || email, // Utiliza o email passado ou o email inserido
+          pedidoId: orderId,
+          payerEmail: payerEmail,
         };
-
-        // Log para verificar o que está sendo enviado para o backend
-        console.log('Enviando os seguintes dados para o backend:', requestBody);
 
         const response = await fetch('http://localhost:8080/api/pagamento/pix', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(requestBody),
         });
 
+        const responseData = await response.json();
+
         if (response.ok) {
-          const data = await response.json();
-          console.log('Pagamento PIX realizado com sucesso:', data);
-          alert('Pagamento PIX realizado com sucesso!');
+          setQrCodeData(responseData.paymentData.point_of_interaction.transaction_data.qr_code);
+          setShowModal(true);
         } else {
-          const errorData = await response.json();
-          console.error('Erro ao realizar o pagamento:', errorData);
           alert('Houve um erro ao processar o pagamento. Tente novamente mais tarde.');
         }
       } catch (error) {
-        console.error('Erro ao enviar a requisição:', error);
         alert('Houve um erro inesperado. Tente novamente mais tarde.');
+      } finally {
+        setLoading(false);
       }
     }
   };
 
   return (
-    <div className='flex flex-row justify-between gap-4 pt-14 min-h-[80vh] border-t'>
-      <div className='flex flex-col gap-4 w-[480px]'>
-        <div className='text-2xl my-3'>
-          <Title text1={'DELIVERY'} text2={'INFORMATION'} />
-        </div>
-        <div className='flex gap-3'>
-          <input
-            type="text"
-            className='border border-gray-300 rounded py-1.5 px-3.5 w-full'
-            placeholder='First Name'
-          />
-          <input
-            type="text"
-            className='border border-gray-300 rounded py-1.5 px-3.5 w-full'
-            placeholder='Last Name'
-          />
-        </div>
-        <input
-          type="email"
-          className='border border-gray-300 rounded py-1.5 px-3.5 w-full'
-          placeholder='Email Address'
-          value={payerEmail}
-          onChange={(e) => setPayerEmail(e.target.value)}
-        />
-        <input
-          type="text"
-          className='border border-gray-300 rounded py-1.5 px-3.5 w-full'
-          placeholder='Street'
-        />
-        <div className='flex gap-3'>
-          <input
-            type="text"
-            className='border border-gray-300 rounded py-1.5 px-3.5 w-full'
-            placeholder='City'
-          />
-          <input
-            type="text"
-            className='border border-gray-300 rounded py-1.5 px-3.5 w-full'
-            placeholder='State'
-          />
-        </div>
-        <div className='flex gap-3'>
-          <input
-            type="text"
-            className='border border-gray-300 rounded py-1.5 px-3.5 w-full'
-            placeholder='Zipcode'
-          />
-          <input
-            type="number"
-            className='border border-gray-300 rounded py-1.5 px-3.5 w-full'
-            placeholder='Country'
-          />
-        </div>
-        <input
-          type="number"
-          className='border border-gray-300 rounded py-1.5 px-3.5 w-full'
-          placeholder='Phone'
-        />
+    <div className="pt-24 px-4 lg:px-20 min-h-screen">
+      {/* Header */}
+      <div className="text-center mb-10">
+        <h1 className="text-3xl font-bold text-gray-800">
+          <span className="text-purple-600">FINALIZE</span> SEU PEDIDO
+        </h1>
+        <p className="text-gray-600 mt-2">Escolha o método de pagamento e forneça suas informações de entrega.</p>
+        <div className="mt-4 border-t-2 border-purple-600 w-16 mx-auto"></div>
       </div>
 
-      {/* Cart Total Section */}
-      <div className='mt-8'>
-        <div className='mt-8 min-w-8'>
-          <CartTotal />
+      {/* Layout principal */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        {/* Coluna: Informações de Entrega */}
+        <div className="col-span-1 lg:col-span-2 space-y-6">
+          <h1 className="text-2xl font-bold text-gray-800">
+            <span className="text-purple-600">INFORMAÇÕES</span> DA ENTREGA
+            <div className="border-t-2 border-purple-600 w-16"></div>
+          </h1>
+          {/* Inputs de entrega omitidos para brevidade */}
         </div>
-        <div className='mt-8'>
-          <Title text1={'PAYMENT'} text2={'METHOD'} />
-          <div className='flex gap-3'>
-            {/* PIX Method */}
+
+        {/* Coluna: Resumo do Pedido */}
+        <div className="space-y-6">
+          <CartTotal total={total} />
+          <h1 className="text-base font-bold text-gray-800">
+            <span className="text-purple-600">MÉTODOS</span> DE PAGAMENTO
+            <div className="border-t-2 border-purple-600 w-16"></div>
+          </h1>
+          <div className="space-y-4">
+            {/* Pagamento via PIX */}
             <div
               onClick={() => setMethod('pix')}
-              className='flex items-center gap-3 border p-2 px-3 cursor-pointer'
+              className={`flex items-center gap-3 p-4 rounded-lg border cursor-pointer ${
+                method === 'pix' ? 'border-purple-600 bg-purple-50' : 'border-gray-300'
+              }`}
             >
-              <p
-                className={`min-w-3.5 h-3.5 border rounded-full ${method === 'pix' ? 'bg-green-400' : ''}`}
-              ></p>
-              <p className='text-gray-500 text-sm font-medium mx-4'>PIX</p>
+              <img src="https://img.icons8.com/color/48/pix.png" alt="PIX" className="w-6 h-6" />
+              <p className="text-gray-700 font-medium">PIX</p>
             </div>
-            {/* Credit Card Method */}
+
+            {/* Pagamento via Cartão de Crédito */}
             <div
               onClick={() => setMethod('creditCard')}
-              className='flex items-center gap-3 border p-2 px-3 cursor-pointer'
+              className={`flex items-center gap-3 p-4 rounded-lg border cursor-pointer ${
+                method === 'creditCard' ? 'border-purple-600 bg-purple-50' : 'border-gray-300'
+              }`}
             >
-              <p
-                className={`min-w-3.5 h-3.5 border rounded-full ${method === 'creditCard' ? 'bg-green-400' : ''}`}
-              ></p>
-              <p className='text-gray-500 text-sm font-medium mx-4'>CREDIT CARD</p>
+              <img src="https://i.imgur.com/iQluR7W.png" alt="Cartão de Crédito" className="w-6 h-6" />
+              <p className="text-gray-700 font-medium">Cartão de Crédito</p>
             </div>
           </div>
-          <div className='w-full mt-8 text-end'>
-            <button
-              onClick={handlePlaceOrder}
-              className='bg-black text-white px-16 py-3 text-sm'
-            >
-              PLACE ORDER
-            </button>
-          </div>
+          <button
+            onClick={handlePlaceOrder}
+            disabled={loading}
+            className={`w-full py-3 rounded-lg font-medium transition ${
+              loading
+                ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
+                : 'bg-purple-600 text-white hover:bg-purple-700'
+            }`}
+          >
+            {loading ? (
+              <div className="flex justify-center items-center space-x-2">
+                <div className="w-5 h-5 border-4 border-t-4 border-white rounded-full animate-spin"></div>
+                <span>Processando...</span>
+              </div>
+            ) : (
+              'FINALIZAR PEDIDO'
+            )}
+          </button>
         </div>
       </div>
 
-      {/* Exibir os produtos no pedido e o total */}
-      <div className="mt-4">
-        <h2>Order Details:</h2>
-        {produtos && produtos.length > 0 ? (
-          <ul>
-            {produtos.map((produto, index) => (
-              <li key={index}>
-                Produto ID: {produto.produtoId}, Quantidade: {produto.quantidade}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No products found in the order.</p>
-        )}
-        <p><strong>Total: {formatCurrency(total)}</strong></p>
-      </div>
+      {/* Modal */}
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg max-w-sm w-full">
+            <h2 className="text-2xl font-bold text-center text-purple-600 mb-6">Pagamento Pendente</h2>
+            <div className="flex flex-col items-center">
+              <QRCode value={qrCodeData} size={256} className="mb-6" />
+              <button
+                onClick={() => {
+                  setShowModal(false);
+                  navigate('/'); // Redireciona para a página inicial
+                }}
+                className="bg-purple-600 text-white py-2 px-6 rounded-lg font-medium hover:bg-purple-700 transition"
+              >
+                Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -4,10 +4,9 @@ import Title from '../components/Title';
 import { assets } from '../assets/assets';
 import { useNavigate } from 'react-router-dom';
 
-
 const Cart = () => {
   const navigate = useNavigate();
-  const { products, currency, cartItems, updateQuantity } = useContext(ShopContext);
+  const { products, currency, cartItems, updateQuantity, addToCart } = useContext(ShopContext);
   const [cartData, setCartData] = useState([]);
 
   useEffect(() => {
@@ -26,7 +25,6 @@ const Cart = () => {
     setCartData(tempData);
   }, [cartItems]);
 
-  // Calcula o valor total do carrinho
   const calculateSubTotal = () => {
     let subTotal = 0;
     cartData.forEach((item) => {
@@ -39,7 +37,6 @@ const Cart = () => {
   };
 
   const calculateShippingFee = () => {
-    // Defina uma taxa fixa de envio ou calcule conforme necessário
     return 10; // Exemplo de taxa de envio
   };
 
@@ -49,21 +46,17 @@ const Cart = () => {
     return subTotal + shippingFee;
   };
 
-  // Função para finalizar a compra e chamar a API
   const handleFinalizePurchase = async () => {
     try {
-      // Recupera o token JWT do localStorage
       const token = localStorage.getItem('token');
       if (!token) {
         alert('Você precisa estar logado para finalizar a compra.');
         return;
       }
   
-      // Decodifica o token para obter o clienteId (se necessário)
-      const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decodifica o JWT
-      const clienteId = decodedToken.id; // Supondo que o clienteId esteja no payload do token
+      const decodedToken = JSON.parse(atob(token.split('.')[1])); 
+      const clienteId = decodedToken.id; 
   
-      // Monta o corpo da requisição com base nos dados do carrinho
       const produtos = cartData.map(item => ({
         produtoId: item._id,
         quantidade: item.quantity,
@@ -74,31 +67,27 @@ const Cart = () => {
         produtos,
       };
   
-      // Envia a requisição para a API com o token no cabeçalho Authorization
       const response = await fetch('http://localhost:8080/api/pedidos', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, // Envia o token JWT no cabeçalho da requisição
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(requestBody),
       });
   
-      // Verifica se a requisição foi bem-sucedida
       if (response.ok) {
         const data = await response.json();
         console.log('Pedido realizado com sucesso:', data);
   
-        // Recupera o e-mail do usuário do localStorage
-        const userEmail = localStorage.getItem('userEmail'); // Recupera o e-mail do usuário do localStorage
+        const userEmail = localStorage.getItem('userEmail');
   
-        // Exemplo de redirecionamento, passando o _id do pedido e o e-mail
         navigate('/place-order', {
           state: {
-            pedidoId: data.pedido._id, // Passa o _id do pedido
+            pedidoId: data.pedido._id,
             produtos,
             total: calculateTotal(),
-            email: userEmail, // Passa o e-mail
+            email: userEmail,
           },
         });
       } else {
@@ -111,74 +100,142 @@ const Cart = () => {
       alert('Houve um erro inesperado. Tente novamente mais tarde.');
     }
   };
-  
+
+  // Função para adicionar um produto ao carrinho
+  const handleAddToCart = (productId) => {
+    addToCart(productId, 1);  // Adiciona o produto com quantidade 1
+  };
 
   return (
-    <div className="border-t pt-14">
-      <div className="text-2xl mb-3">
-        <Title text1={'YOUR'} text2={'CART'} />
+    <div className="pt-20 px-4">
+      <div className="text-wrap mb-1">
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">
+          <span className="text-purple-600">SEU</span> CARRINHO
+        </h2>
+        <div className="mt-4 border-t-2 border-purple-600 w-16 mx-auto"></div>
       </div>
-      <div>
-        {cartData.map((item) => {
-          const productData = products.find((i) => i._id === item._id); // Encontra o produto
-          if (!productData) return null; // Se o produto não for encontrado, não renderiza o item
 
-          // Verifica se a URL da foto é válida
-          const productImage = productData.foto ? productData.foto : 'default-image.jpg'; // Usa uma imagem padrão caso não tenha foto
+      {/* Layout com duas colunas ajustadas */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Listagem dos produtos - ocupando mais espaço */}
+        <div className="md:col-span-2 space-y-6">
+          {cartData.map((item) => {
+            const productData = products.find((i) => i._id === item._id);
+            if (!productData) return null;
 
-          return (
-            <div key={item._id + item.size} className="py-4 border-t border-b text-gray-700 grid grid-cols-[4fr_2fr_0.5fr] items-center gap-4">
-              <div className="flex items-start gap-6">
-                <img className="w-20" src={productImage} alt={productData.nome} />
-                <div>
-                  <p className="text-lg font-medium">{productData.nome}</p>
-                  <div className="flex items-center gap-5 mt-2">
-                    <p>{currency}{productData.preco}</p>
-                    <p className="px-3 py-1 border bg-slate-50">{item.size}</p>
+            const productImage = productData.foto ? productData.foto : 'default-image.jpg';
+
+            return (
+              <div key={item._id + item.size} className="flex items-center justify-between py-4 border-b">
+                <div className="flex items-center gap-4">
+                  <img className="w-20 h-20 object-cover" src={productImage} alt={productData.nome} />
+                  <div>
+                    <p className="text-lg sm:text-xl font-medium">{productData.nome}</p>
+                    <div className="flex gap-4 mt-2 items-center">
+                      <p className="text-sm sm:text-lg">{currency}{productData.preco}</p>
+                      <p className="px-3 py-1 border bg-slate-50 text-sm">{item.size}</p>
+                    </div>
                   </div>
                 </div>
+
+                {/* Quantidade */}
+                <input
+                  type="number"
+                  value={item.quantity}
+                  onChange={(e) => e.target.value === '' || e.target.value === '0' ? updateQuantity(item._id, item.size, 0) : updateQuantity(item._id, item.size, Number(e.target.value))}
+                  className="border w-14 px-2 py-1"
+                  min={1}
+                />
+
+                {/* Lixeira */}
+                <img
+                  onClick={() => updateQuantity(item._id, item.size, 0)}
+                  src={assets.bin_icon}
+                  className="cursor-pointer w-5 ml-4"
+                  alt="Remover"
+                />
               </div>
-              <input
-                type="number"
-                value={item.quantity} // Utiliza o value controlado
-                onChange={(e) => e.target.value === '' || e.target.value === '0' ? updateQuantity(item._id, item.size, 0) : updateQuantity(item._id, item.size, Number(e.target.value))}
-                className="border w-14 px-2 py-1"
-                min={1}
-              />
-              <img
-                onClick={() => updateQuantity(item._id, item.size, 0)}
-                src={assets.bin_icon}
-                className="cursor-pointer w-5 mr-4"
-                alt="Remover"
-              />
-            </div>
-          );
-        })}
-        <div className="flex justify-end my-20">
-          <div className="w-[450px]">
-            <div className="flex justify-between text-xl font-medium">
+            );
+          })}
+        </div>
+
+        {/* Resumo da Compra - ocupando 1/3 do espaço */}
+        <div className="bg-white p-6 shadow-md rounded-lg">
+          <div className="space-y-4">
+            <div className="flex justify-between text-lg sm:text-xl font-medium text-gray-700">
               <span>SubTotal</span>
-              <span>{currency}{calculateSubTotal().toFixed(2)}</span>
+              <span>{currency}{calculateSubTotal().toFixed(2).replace('.', ',')}</span>
             </div>
-            <div className="flex justify-between text-xl font-medium mt-4">
-              <span>Shipping Fee</span>
-              <span>{currency}{calculateShippingFee().toFixed(2)}</span>
+
+            <div className="flex justify-between text-lg sm:text-xl font-medium text-gray-700">
+              <span>Taxa de Envio</span>
+              <span>{currency}{calculateShippingFee().toFixed(2).replace('.', ',')}</span>
             </div>
-            <div className="flex justify-between text-xl font-medium mt-4">
-              <span>Total</span>
-              <span>{currency}{calculateTotal().toFixed(2)}</span>
-            </div>
-            {/* O botão agora está isolado e não afeta o layout do Total */}
-            <div className="w-full text-end mt-8">
-              {/* Chama a função handleFinalizePurchase ao clicar */}
-              <button
-                onClick={handleFinalizePurchase}
-                className="bg-black text-white text-sm px-8 py-3 rounded-full hover:bg-gray-800 transition duration-200 ease-in-out"
-              >
-                FINALIZE PURCHASE
-              </button>
+
+            <div className="flex justify-between text-lg sm:text-xl font-medium text-gray-700">
+              <span className="font-semibold">Total</span>
+              <span className="font-semibold text-green-600">{currency}{calculateTotal().toFixed(2).replace('.', ',')}</span>
             </div>
           </div>
+
+          {/* Botão Finalizar Compra */}
+          <div className="mt-6">
+            <button
+              onClick={handleFinalizePurchase}
+              className="w-full bg-purple-600 text-white text-lg sm:text-xl font-medium py-3 rounded-full hover:bg-purple-700 transition duration-300"
+            >
+              Finalizar Compra
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Seção de Outros Produtos */}
+      <div className="my-12 px-4 md:px-8">
+        {/* Título e descrição */}
+        <div className="text-center mb-8">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-800">
+            <span className="text-purple-600">OUTROS</span> PRODUTOS
+          </h2>
+          <p className="mt-2 text-base sm:text-lg text-gray-600 max-w-3xl mx-auto">
+            Descubra mais produtos que podem interessar a você. Não perca!
+          </p>
+          <div className="mt-4 border-t-2 border-purple-600 w-16 mx-auto"></div>
+        </div>
+
+        {/* Grid de Produtos */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 px-1">
+          {products.map((item) => (
+            <div
+              key={item._id}
+              className="bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden transform hover:scale-95 transition duration-300 ease-in-out"
+            >
+              <img
+                src={item.foto}
+                alt={item.nome}
+                className="w-full h-64 sm:h-72 object-cover rounded-t-lg"
+              />
+              <div className="p-6"> {/* Aumentando o padding para dar mais altura ao conteúdo */}
+                <h3 className="text-base sm:text-lg font-medium text-gray-800 truncate">
+                  {item.nome}
+                </h3>
+                <p className="text-sm sm:text-base text-gray-500 mb-2">
+                  {item.categoria}
+                </p>
+                <div className="flex items-center justify-between">
+                  <p className="text-lg font-semibold text-gray-900">
+                    {currency}{item.preco.toFixed(2)}
+                  </p>
+                </div>
+                <button
+                  onClick={() => handleAddToCart(item._id)}
+                  className="bg-purple-600 text-white text-xs sm:text-sm py-2 px-3 rounded-lg hover:bg-purple-700 transition duration-300"
+                >
+                  Adicionar
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

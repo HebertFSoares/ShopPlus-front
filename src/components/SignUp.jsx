@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import googleIcon from '../utils/pesquisa.png';
 import facebookIcon from '../utils/facebook.png';
 import linkedinIcon from '../utils/linkedin.png';
+import InputMask from "react-input-mask"; // Importando InputMask
 
 function SignUpForm() {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ function SignUpForm() {
     const token = localStorage.getItem("token");
     if (token) {
       // Se houver token, redireciona para a página principal
-      navigate("/home"); // Ajuste o caminho de acordo com sua necessidade
+      navigate("/"); // Ajuste o caminho de acordo com sua necessidade
     }
   }, [navigate]);
 
@@ -138,15 +139,23 @@ function SignUpForm() {
           onChange={handleChange}
           className="form-input"
         />
-        <input
-          id="input-cpf"
-          type="text"
-          placeholder="CPF"
-          name="cpf"
+        {/* Máscara CPF */}
+        <InputMask
+          mask="999.999.999-99"
           value={state.cpf}
           onChange={handleChange}
-          className="form-input"
-        />
+          name="cpf"
+        >
+          {(inputProps) => (
+            <input
+              {...inputProps}
+              id="input-cpf"
+              type="text"
+              placeholder="CPF"
+              className="form-input"
+            />
+          )}
+        </InputMask>
         <input
           id="input-email"
           type="email"
@@ -165,15 +174,23 @@ function SignUpForm() {
           onChange={handleChange}
           className="form-input"
         />
-        <input
-          id="input-cep"
-          type="text"
-          placeholder="CEP"
-          name="cep"
+        {/* Máscara CEP */}
+        <InputMask
+          mask="99999-999"
           value={state.cep}
           onChange={handleChange}
-          className="form-input"
-        />
+          name="cep"
+        >
+          {(inputProps) => (
+            <input
+              {...inputProps}
+              id="input-cep"
+              type="text"
+              placeholder="CEP"
+              className="form-input"
+            />
+          )}
+        </InputMask>
         <button
           id="submit-button"
           type="submit"

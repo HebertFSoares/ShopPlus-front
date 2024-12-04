@@ -244,8 +244,8 @@ button.ghost {
   justify-content: center;
   align-items: center;
   margin: 0 10px;
-  height: 50px;
-  width: 50px;
+  height: 40px; /* Tamanho reduzido para telas pequenas */
+  width: 40px;  /* Tamanho reduzido para telas pequenas */
 }
 
 footer {
@@ -296,4 +296,161 @@ footer a {
 input, button {
   width: 100%;
   max-width: 400px;
+}
+
+
+@media screen and (max-width: 768px) {
+  /* Esconde os painéis de overlay que são exibidos apenas em telas maiores */
+  #overlay-left, #overlay-right {
+    display: none;
+  }
+
+  /* Certifica que a parte de login/cadastro seja exibida corretamente */
+  #container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /* Exibe os elementos de forma empilhada */
+  }
+
+  .form-container {
+    display: block; /* Exibe o formulário */
+    width: 90%; /* Reduz a largura para caber melhor na tela */
+  }
+  
+  #login-heading {
+    font-size: 1.5em; /* Ajusta o título */
+  }
+}
+
+/* Para telas maiores, mostramos o overlay */
+@media screen and (min-width: 769px) {
+  .overlay-container {
+    display: block; /* Exibe os painéis de overlay */
+  }
+
+  #container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .form-container {
+    width: 50%;
+  }
+}
+
+/* Para telas médias (tablets) */
+/* Ajuste para tablets */
+@media screen and (max-width: 1024px) {
+  .social-container a {
+    width: 45px;
+    height: 45px;
+  }
+}
+
+/* Para telas grandes (desktop) */
+@media screen and (min-width: 1025px) {
+  #container {
+    width: 1100px;
+    max-width: 1100px; /* Defina a largura para não ultrapassar */
+  }
+}
+
+
+/* Para telas médias (tablets) */
+@media screen and (max-width: 1024px) {
+  #container {
+    width: 80%;
+    max-width: 100%;
+  }
+
+  .form-container {
+    padding: 20px 40px;
+  }
+
+  .form-input {
+    padding: 14px 18px;
+  }
+
+  button {
+    padding: 12px 25px;
+    font-size: 14px;
+  }
+
+  .social-container a {
+    width: 45px;
+    height: 45px;
+  }
+
+  /* Ajuste da largura dos botões sociais */
+  #container {
+    width: 90%;
+    max-width: 100%;
+  }
+}
+
+/* Para telas grandes (desktop) */
+@media screen and (min-width: 1025px) {
+  #container {
+    width: 1100px;
+    max-width: 250%;
+  }
+
+  .social-container a {
+    width: 50px;
+    height: 50px;
+  }
+
+  button {
+    padding: 12px 30px;
+  }
+}
+
+/* Para dispositivos com resolução 414x896 (ex: iPhone 8 Plus) */
+@media screen and (max-width: 414px) {
+  #container {
+    width: 100%;  /* Garantir que o container ocupe 100% da tela */
+    max-width: 100%;  /* Evitar overflow */
+    min-height: 90vh;
+    box-shadow: none;  /* Remover sombra para não sobrecarregar o visual */
+  }
+
+  /* Ajuste do formulário */
+  .form-container {
+    padding: 20px;
+  }
+
+  .form-input {
+    padding: 12px 18px;  /* Ajuste de padding para manter o design confortável */
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 14px;  /* Ajustar o tamanho do botão */
+  }
+
+  /* Ajuste do texto */
+  #login-heading, .login-heading {
+    font-size: 24px;  /* Reduzir um pouco o tamanho para telas pequenas */
+  }
+
+  #welcome-back-title, .welcome-back-title {
+    font-size: 20px;  /* Ajuste do tamanho para que caiba bem */
+  }
+
+  #welcome-back-text, .welcome-back-text {
+    font-size: 14px;  /* Ajuste do texto para não ficar muito pequeno */
+    line-height: 18px;
+  }
+
+  .social-container a {
+    width: 40px;  /* Reduzir o tamanho dos ícones sociais */
+    height: 40px;
+  }
+
+  .overlay-panel {
+    padding: 10px 30px;  /* Ajustar o padding para manter o visual limpo */
+  }
 }
