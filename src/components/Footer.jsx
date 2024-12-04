@@ -1,7 +1,6 @@
 const Footer = () => {
   return (
     <div className="bg-purple-600 text-white mt-20">
-      {/* Conteúdo principal do Footer */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-14 py-10 px-8 md:px-20 text-sm">
         <div className="sm:col-span-2 md:col-span-1">
           <p className="text-gray-300">

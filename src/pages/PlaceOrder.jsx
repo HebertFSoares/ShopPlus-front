@@ -45,7 +45,7 @@ const PlaceOrder = () => {
           return;
         }
 
-        const response = await fetch('http://localhost:8080/api/cliente', {
+        const response = await fetch('https://shopplus.ddns.net/api/cliente', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -104,7 +104,7 @@ const PlaceOrder = () => {
           payerEmail: payerEmail,
         };
 
-        const response = await fetch('http://localhost:8080/api/pagamento/pix', {
+        const response = await fetch('https://shopplus.ddns.net/api/pagamento/pix', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

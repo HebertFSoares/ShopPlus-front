@@ -33,7 +33,7 @@ const CodeVerification = () => {
     const enteredCode = code.join('');
 
     try {
-      const response = await fetch('http://localhost:8080/api/auth/verify-otp', {
+      const response = await fetch('https://shopplus.ddns.net/api/auth/verify-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

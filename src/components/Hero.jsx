@@ -3,7 +3,6 @@ import { assets } from "../assets/assets";
 const Hero = () => {
   return (
     <div className="flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-purple-700 to-indigo-800 text-white h-[85vh] w-screen">
-      {/* Lado esquerdo do Hero com Título e Descrição */}
       <div className="text-center md:text-left md:w-1/2 px-4 md:px-0">
         <h1 className="text-3xl sm:text-4xl font-bold mb-4">
           A melhor loja online para suas compras!

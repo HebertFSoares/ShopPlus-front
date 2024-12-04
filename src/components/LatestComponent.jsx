@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
-import { Link } from "react-router-dom"; // Importando Link do react-router-dom
+import { Link } from "react-router-dom";
 
 const LatestComponent = () => {
   const { products } = useContext(ShopContext);
@@ -9,11 +9,11 @@ const LatestComponent = () => {
   useEffect(() => {
     const fetchLatestProducts = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/produtos");
+        const response = await fetch("https://shopplus.ddns.net/api/produtos");
         const data = await response.json();
 
         if (response.ok) {
-          setLatestProducts(data.slice(0, 8)); // Pega os 8 últimos produtos
+          setLatestProducts(data.slice(0, 8));
         } else {
           console.error("Erro ao buscar produtos:", data.message);
         }
@@ -27,7 +27,6 @@ const LatestComponent = () => {
 
   return (
     <div className="my-12 px-4 md:px-8">
-      {/* Título e descrição */}
       <div className="text-center mb-8">
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-800">
           <span className="text-purple-600">ÚLTIMOS</span> LANÇAMENTOS
@@ -38,13 +37,11 @@ const LatestComponent = () => {
         </p>
         <div className="mt-4 border-t-2 border-purple-600 w-16 mx-auto"></div>
       </div>
-
-      {/* Grid de Produtos */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 px-4">
         {latestProducts.map((item) => (
           <Link
-            key={item._id} // Utilizando o _id como key para o Link
-            to={`/product/${item._id}`} // Rota para a página do produto
+            key={item._id}
+            to={`/product/${item._id}`}
             className="bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden transform hover:scale-105 transition duration-300 ease-in-out"
           >
             <img

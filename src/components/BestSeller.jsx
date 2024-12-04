@@ -5,21 +5,20 @@ import Title from './Title';
 
 const BestSeller = () => {
   const [bestSeller, setBestSeller] = useState([]);
-  const [loading, setLoading] = useState(true);  // Adiciona um estado de loading
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Realiza a requisição com fetch
-    fetch('http://localhost:8080/api/produtos/oldest')
-      .then((response) => response.json())  // Converte a resposta para JSON
+    fetch('https://shopplus.ddns.net/api/produtos/oldest')
+      .then((response) => response.json())
       .then((data) => {
-        setBestSeller(data);  // Atualiza o estado com os produtos recebidos
-        setLoading(false);  // Desativa o loading
+        setBestSeller(data); 
+        setLoading(false);
       })
       .catch((error) => {
         console.error('Erro ao buscar produtos:', error);
-        setLoading(false);  // Desativa o loading em caso de erro
+        setLoading(false);
       });
-  }, []);  // O array vazio garante que o efeito seja executado apenas uma vez
+  }, []); 
 
   return (
     <div className="my-10">
@@ -31,7 +30,7 @@ const BestSeller = () => {
         <div className="grid grid-cols-5 gap-4 pt-7">
           {
             loading ? (
-              <p>Carregando...</p>  // Exibe uma mensagem de carregamento
+              <p>Carregando...</p>
             ) : (
               bestSeller.map((item) => (
                 <ProductItem key={item._id} item={item} />

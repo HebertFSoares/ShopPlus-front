@@ -6,7 +6,6 @@ const ProductItem = ({ item }) => {
   const { _id, nome, preco, foto } = item; // Use 'nome' e 'preco' do backend
   const { currency } = useContext(ShopContext);
 
-  // Verifique se a foto existe, se não, use uma imagem padrão
   const imageUrl = foto ? foto : '/path/to/default-image.jpg'; // Imagem padrão se não houver foto
 
   return (

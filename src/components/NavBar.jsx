@@ -5,32 +5,28 @@ import { ShopContext } from "../context/ShopContext";
 
 const NavBar = () => {
   const { setShowSearch, getCartCount } = useContext(ShopContext);
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // Controle do menu de hambúrguer
-  const [isHamburgerOpen, setIsHamburgerOpen] = useState(false); // Controle do estado do ícone de hambúrguer
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
 
-  // Função para alternar o estado do menu
   const toggleMenu = () => {
     setIsHamburgerOpen(!isHamburgerOpen);
-    setIsMenuOpen(!isMenuOpen); // Alterna a visibilidade do menu
+    setIsMenuOpen(!isMenuOpen); 
   };
 
   return (
     <div className="fixed top-0 left-0 w-full bg-purple-600 text-white shadow-lg z-50">
-      {/* Container da Navbar */}
       <div className="flex items-center justify-between w-full py-4 px-6">
         {/* Logo */}
         <Link to="/" className="flex items-center">
           <span className="text-2xl sm:text-3xl font-bold text-white">ShopPlus</span>
         </Link>
 
-        {/* Menu de Navegação Responsivo (Hamburguer) */}
         <div className="sm:hidden flex items-center relative">
           <button
             onClick={toggleMenu}
             className="text-white text-2xl"
             aria-label="Abrir menu"
           >
-            {/* Ícone de Hambúrguer */}
             <div
               className={`hamburger-icon flex flex-col justify-between items-center w-7 h-6 transform transition-all duration-300 ${
                 isHamburgerOpen ? "rotate-45" : ""
@@ -54,13 +50,12 @@ const NavBar = () => {
             </div>
           </button>
 
-          {/* Menu suspenso */}
           {isMenuOpen && (
             <div className="absolute top-full right-0 mt-2 bg-white text-gray-800 rounded shadow-lg w-48">
               <ul className="flex flex-col">
                 <NavLink
                   to="/"
-                  onClick={() => setIsMenuOpen(false)} // Fecha o menu ao clicar
+                  onClick={() => setIsMenuOpen(false)}
                   className="px-4 py-2 hover:bg-purple-100"
                 >
                   INÍCIO

@@ -13,7 +13,7 @@ const Collection = () => {
   // Função para pegar os produtos
   const fetchProducts = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/produtos');
+      const response = await fetch('https://shopplus.ddns.net/api/produtos');
       if (!response.ok) {
         throw new Error('Erro ao buscar os produtos');
       }

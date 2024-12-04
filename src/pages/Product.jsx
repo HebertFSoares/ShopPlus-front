@@ -14,14 +14,14 @@ const Product = () => {
   const [relatedProducts, setRelatedProducts] = useState([]);
 
   const fetchProductData = async () => {
-    const response = await fetch(`http://localhost:8080/api/produtos/${productId}`);
+    const response = await fetch(`https://shopplus.ddns.net/api/produtos/${productId}`);
     const data = await response.json();
     setProductData(data);
     setImage(data.foto);
   };
 
   const fetchRelatedProducts = async () => {
-    const response = await fetch(`http://localhost:8080/api/produtos`);
+    const response = await fetch(`https://shopplus.ddns.net/api/produtos`);
     const data = await response.json();
     setRelatedProducts(data);
   };

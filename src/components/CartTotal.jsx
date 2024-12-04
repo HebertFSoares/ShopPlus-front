@@ -5,7 +5,6 @@ import Title from './Title';
 const CartTotal = () => {
   const { currency, delivery_fee, getCartAmount } = useContext(ShopContext);
 
-  // Função para formatar valores monetários
   const formatCurrency = (value) => {
     return `${currency} ${value.toFixed(2).replace('.', ',')}`;
   };

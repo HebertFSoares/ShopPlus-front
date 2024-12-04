@@ -67,7 +67,7 @@ const Cart = () => {
         produtos,
       };
   
-      const response = await fetch('http://localhost:8080/api/pedidos', {
+      const response = await fetch('https://shopplus.ddns.net/api/pedidos', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

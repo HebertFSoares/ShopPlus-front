@@ -4,7 +4,6 @@ const Categories = () => {
   return (
     <div className="py-16 bg-gradient-to-r from-purple-100 to-indigo-100">
       <div className="text-center mb-8">
-        {/* Título e descrição */}
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-800">
           <span className="text-purple-600">NOSSAS</span> CATEGORIAS
         </h2>

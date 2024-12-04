@@ -14,7 +14,7 @@ const ShopContextProvider = (props) => {
 
   // Carregar os produtos do backend
   const fetchProducts = async () => {
-    const response = await fetch("http://localhost:8080/api/produtos");
+    const response = await fetch("https://shopplus.ddns.net/api/produtos");
     const data = await response.json();
     setProducts(data); // Atualiza a lista de produtos com dados do backend
   };

@@ -44,7 +44,7 @@ function SignInForm() {
     const { email, password } = state;
 
     try {
-      const response = await fetch("http://localhost:8080/api/auth/cliente", {
+      const response = await fetch("https://shopplus.ddns.net/api/auth/cliente", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
