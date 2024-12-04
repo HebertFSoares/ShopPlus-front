@@ -1,0 +1,456 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,800");
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+#login-page {
+  background: linear-gradient(135deg, #e6d9f7, #d0b3e0); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: "Montserrat", sans-serif;
+  height: 100vh;
+  margin: -20px 0 50px;
+  overflow: hidden;
+  margin: 0;
+}
+
+#login-heading, .login-heading {
+  font-weight: bold;
+  margin: 0;
+}
+
+#welcome-back-title, .welcome-back-title {
+  font-weight: bold;
+  margin: 0;
+}
+
+#welcome-back-text, .welcome-back-text {
+  font-size: 14px;
+  font-weight: 100;
+  line-height: 20px;
+  letter-spacing: 0.5px;
+  margin: 20px 0 30px;
+}
+
+#error-message, .error-message {
+  font-size: 14px;
+  font-weight: 100;
+  line-height: 20px;
+  letter-spacing: 0.5px;
+  margin: 20px 0 30px;
+}
+
+#or-login-with-email, .or-login-with-email {
+  font-size: 12px;
+}
+
+
+#forgot-password-link, .forgot-password-link {
+  color: #333;
+  font-size: 14px;
+  text-decoration: none;
+  margin: 15px 0;
+}
+
+button {
+  border-radius: 20px;
+  border: 1px solid #8e44ad; 
+  background-color: #8e44ad; 
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 12px 30px; 
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: transform 80ms ease-in;
+  width: auto;
+  display: inline-block;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+button:focus {
+  outline: none;
+}
+
+button.ghost {
+  background-color: transparent;
+  border-color: #ffffff;
+}
+
+#sign-up-form, .sign-up-form {
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 70px;
+  height: 100%;
+  text-align: center;
+}
+
+#input-name, #input-cpf, #input-email, #input-password, #input-cep, #email-input, #password-input, .form-input {
+  background-color: #eee;
+  border: none;
+  padding: 14px 18px;
+  margin: 12px 0;
+  width: 100%;
+}
+
+#container {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  position: relative;
+  overflow: hidden;
+  width: 1100px;
+  max-width: 250%;
+  min-height: 80vh;
+  height: auto;
+}
+
+.form-container {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transition: all 0.6s ease-in-out;
+}
+
+.sign-in-container {
+  left: 0;
+  width: 50%;
+  z-index: 2;
+}
+
+#container.right-panel-active .sign-in-container {
+  transform: translateX(100%);
+}
+
+.sign-up-container {
+  left: 0;
+  width: 50%;
+  opacity: 0;
+  z-index: 1;
+}
+
+#container.right-panel-active .sign-up-container {
+  transform: translateX(100%);
+  opacity: 1;
+  z-index: 5;
+  animation: show 0.6s;
+}
+
+@keyframes show {
+  0%,
+  49.99% {
+    opacity: 0;
+    z-index: 1;
+  }
+
+  50%,
+  100% {
+    opacity: 1;
+    z-index: 5;
+  }
+}
+
+.overlay-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  transition: transform 0.6s ease-in-out;
+  z-index: 100;
+}
+
+#container.right-panel-active .overlay-container {
+  transform: translateX(-100%);
+}
+
+.overlay {
+  background: #8e44ad;
+  background: -webkit-linear-gradient(to right, #8e44ad, #9b59b6);
+  background: linear-gradient(to right, #8e44ad, #9b59b6);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0 0;
+  color: #ffffff;
+  position: relative;
+  left: -100%;
+  height: 100%;
+  width: 200%;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+}
+
+#container.right-panel-active .overlay {
+  transform: translateX(50%);
+}
+
+.overlay-panel {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 50px;
+  text-align: center;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+}
+
+.overlay-left {
+  transform: translateX(-20%);
+}
+
+#container.right-panel-active .overlay-left {
+  transform: translateX(0);
+}
+
+.overlay-right {
+  right: 0;
+  transform: translateX(0);
+}
+
+#container.right-panel-active .overlay-right {
+  transform: translateX(20%);
+}
+
+.social-container {
+  margin: 20px 0;
+}
+
+.social-container a {
+  border: 1px solid #dddddd;
+  border-radius: 50%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 10px;
+  height: 40px; /* Tamanho reduzido para telas pequenas */
+  width: 40px;  /* Tamanho reduzido para telas pequenas */
+}
+
+footer {
+  background-color: #222;
+  color: #fff;
+  font-size: 14px;
+  bottom: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 999;
+}
+
+footer p {
+  margin: 10px 0;
+}
+
+footer i {
+  color: red;
+}
+
+footer a {
+  color: #3c97bf;
+  text-decoration: none;
+}
+
+.find-cep-link {
+  display: inline-block;
+  padding: 8px 12px;
+  background-color: #8e44ad;
+  color: #fff;
+  font-size: 14px;
+  text-decoration: none;
+  text-align: center;
+  border-radius: 20px;
+  transition: transform 80ms ease-in;
+}
+
+.find-cep-link:hover {
+  background-color: #9b59b6;
+}
+
+.find-cep-link:active {
+  transform: scale(0.95);
+}
+
+input, button {
+  width: 100%;
+  max-width: 400px;
+}
+
+
+@media screen and (max-width: 768px) {
+  /* Esconde os painéis de overlay que são exibidos apenas em telas maiores */
+  #overlay-left, #overlay-right {
+    display: none;
+  }
+
+  /* Certifica que a parte de login/cadastro seja exibida corretamente */
+  #container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /* Exibe os elementos de forma empilhada */
+  }
+
+  .form-container {
+    display: block; /* Exibe o formulário */
+    width: 90%; /* Reduz a largura para caber melhor na tela */
+  }
+  
+  #login-heading {
+    font-size: 1.5em; /* Ajusta o título */
+  }
+}
+
+/* Para telas maiores, mostramos o overlay */
+@media screen and (min-width: 769px) {
+  .overlay-container {
+    display: block; /* Exibe os painéis de overlay */
+  }
+
+  #container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .form-container {
+    width: 50%;
+  }
+}
+
+/* Para telas médias (tablets) */
+/* Ajuste para tablets */
+@media screen and (max-width: 1024px) {
+  .social-container a {
+    width: 45px;
+    height: 45px;
+  }
+}
+
+/* Para telas grandes (desktop) */
+@media screen and (min-width: 1025px) {
+  #container {
+    width: 1100px;
+    max-width: 1100px; /* Defina a largura para não ultrapassar */
+  }
+}
+
+
+/* Para telas médias (tablets) */
+@media screen and (max-width: 1024px) {
+  #container {
+    width: 80%;
+    max-width: 100%;
+  }
+
+  .form-container {
+    padding: 20px 40px;
+  }
+
+  .form-input {
+    padding: 14px 18px;
+  }
+
+  button {
+    padding: 12px 25px;
+    font-size: 14px;
+  }
+
+  .social-container a {
+    width: 45px;
+    height: 45px;
+  }
+
+  /* Ajuste da largura dos botões sociais */
+  #container {
+    width: 90%;
+    max-width: 100%;
+  }
+}
+
+/* Para telas grandes (desktop) */
+@media screen and (min-width: 1025px) {
+  #container {
+    width: 1100px;
+    max-width: 250%;
+  }
+
+  .social-container a {
+    width: 50px;
+    height: 50px;
+  }
+
+  button {
+    padding: 12px 30px;
+  }
+}
+
+/* Para dispositivos com resolução 414x896 (ex: iPhone 8 Plus) */
+@media screen and (max-width: 414px) {
+  #container {
+    width: 100%;  /* Garantir que o container ocupe 100% da tela */
+    max-width: 100%;  /* Evitar overflow */
+    min-height: 90vh;
+    box-shadow: none;  /* Remover sombra para não sobrecarregar o visual */
+  }
+
+  /* Ajuste do formulário */
+  .form-container {
+    padding: 20px;
+  }
+
+  .form-input {
+    padding: 12px 18px;  /* Ajuste de padding para manter o design confortável */
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 14px;  /* Ajustar o tamanho do botão */
+  }
+
+  /* Ajuste do texto */
+  #login-heading, .login-heading {
+    font-size: 24px;  /* Reduzir um pouco o tamanho para telas pequenas */
+  }
+
+  #welcome-back-title, .welcome-back-title {
+    font-size: 20px;  /* Ajuste do tamanho para que caiba bem */
+  }
+
+  #welcome-back-text, .welcome-back-text {
+    font-size: 14px;  /* Ajuste do texto para não ficar muito pequeno */
+    line-height: 18px;
+  }
+
+  .social-container a {
+    width: 40px;  /* Reduzir o tamanho dos ícones sociais */
+    height: 40px;
+  }
+
+  .overlay-panel {
+    padding: 10px 30px;  /* Ajustar o padding para manter o visual limpo */
+  }
+}

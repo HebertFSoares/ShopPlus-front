@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilos Globais */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  @apply bg-gradient-to-r from-purple-100 to-indigo-100 text-gray-800 font-sans antialiased;
+}
+
+/* Remove scrollbar */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Normalização de margens e box-sizing */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Navegação (NavBar) */
+.navbar {
+  @apply bg-[#7c3aed] text-white shadow-md fixed top-0 w-full z-50; /* Roxo médio */
+}
+
+/* Links na NavBar */
+.navbar a {
+  @apply text-white hover:bg-purple-700 px-6 py-2 rounded-md transition-all ease-in-out duration-200;
+}
+
+/* Barra de pesquisa */
+.searchbar {
+  @apply bg-[#d8b3f3] text-gray-800 rounded-lg p-2 shadow-inner; /* Roxo claro */
+}
+
+.searchbar input {
+  @apply text-gray-800 w-full bg-transparent outline-none placeholder-gray-600;
+}
+
+/* Rodapé */
+.footer {
+  @apply bg-[#7c3aed] text-white py-6 text-center mt-12;
+}
+
+/* Botões */
+button {
+  @apply bg-[#7c3aed] text-white hover:bg-purple-700 px-6 py-3 rounded-lg shadow-md transition-all ease-in-out duration-200;
+}
+
+/* Páginas principais */
+.home, .product, .cart {
+  @apply bg-purple-50 p-6 rounded-lg shadow-lg w-full mt-8;
+}
+
+/* Cards de produto */
+.product-card {
+  @apply bg-gradient-to-r from-purple-100 to-indigo-100 p-4 rounded-lg shadow-lg transition-transform duration-200;
+}
+
+.product-card:hover {
+  @apply transform scale-105 shadow-xl;
+}
+
+/* Links gerais */
+a {
+  @apply text-[#7c3aed] hover:text-purple-800 transition-all ease-in-out duration-200;
+}
+
+/* Ajustes responsivos */
+@media (min-width: 768px) {
+  .navbar a {
+    @apply px-8;
+  }
+
+  .product-card {
+    @apply p-6;
+  }
+
+  .footer {
+    @apply text-lg;
+  }
+}
