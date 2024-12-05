@@ -13,16 +13,17 @@ import Footer from './components/Footer';
 import SearchBar from './components/SearchBar';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ScrollToTop from './components/ScrollToTop';
 
 const App = () => {
   const location = useLocation();
-  const hideFooterPages = ['/login', '/sign-up', '/otp']; // Adicione a rota '/otp' para ocultar o Footer
-  const hideNavBarPages = ['/login', '/sign-up', '/otp']; // Adicione a rota '/otp' para ocultar o NavBar
+  const hideFooterPages = ['/login', '/sign-up', '/otp'];
+  const hideNavBarPages = ['/login', '/sign-up', '/otp'];
 
   return (
     <div>
       <ToastContainer />
-      {/* Condicional para renderizar o NavBar apenas se não estiver nas páginas de login */}
+      <ScrollToTop />
       {!hideNavBarPages.includes(location.pathname) && <NavBar />}
       <SearchBar />
       <Routes>
@@ -34,9 +35,8 @@ const App = () => {
         <Route path='/place-order' element={<PlaceOrder />} />
         <Route path='/orders' element={<Orders />} />
         <Route path='/login' element={<Login />} />
-        <Route path='/otp' element={<OTPVerification />} /> {/* Nova rota para OTP */}
+        <Route path='/otp' element={<OTPVerification />} />
       </Routes>
-      {/* Condicional para renderizar o Footer apenas se não estiver nas páginas de login */}
       {!hideFooterPages.includes(location.pathname) && <Footer />}
     </div>
   );
