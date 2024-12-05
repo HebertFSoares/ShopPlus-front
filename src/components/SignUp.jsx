@@ -38,18 +38,18 @@ function SignUpForm() {
 
   const handleOnSubmit = async (evt) => {
     evt.preventDefault();
-  
+    
     const { name, cpf, email, password, cep } = state;
-  
+    
     // Verificação de campos obrigatórios
     if (!name || !email || !password || !cpf || !cep) {
       setError("Por favor, preencha todos os campos.");
       return;
     }
-  
+    
     setLoading(true);
     setError(null);
-  
+    
     try {
       const response = await fetch("https://shopplus.ddns.net/api/auth/register", {
         method: "POST",
@@ -64,12 +64,12 @@ function SignUpForm() {
           cep,
         }),
       });
-  
+      
       const data = await response.json();
-  
+      
       if (response.status === 200 || response.status === 201) {
         alert("Cadastro realizado com sucesso! Enviamos um código de verificação para o seu e-mail.");
-  
+        
         localStorage.setItem('userEmail', email);
         setOtpSent(true);
         setState({
@@ -80,7 +80,11 @@ function SignUpForm() {
           cep: "",
         });
         navigate("/otp");
+      } else if (response.status === 422 && data.error === "email_disabled") {
+        // Tratamento específico para o erro de e-mail inválido
+        setError("O e-mail fornecido não está habilitado. Por favor, use um e-mail válido.");
       } else {
+        // Outros erros retornados pela API
         setError(data.message || "Erro ao realizar o cadastro.");
       }
     } catch (error) {
@@ -88,7 +92,7 @@ function SignUpForm() {
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   return (
     <div id="sign-up-form-container" className="form-container sign-up-container">
