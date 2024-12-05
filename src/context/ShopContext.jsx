@@ -24,23 +24,24 @@ const ShopContextProvider = (props) => {
   }, []);
 
   const addToCart = async (itemId, size) => {
-    if (!size) {
-      toast.error("Select Product Size");
-      return;
-    }
-
-    // Clonando o estado atual do carrinho
-    let cartData = structuredClone(cartItems);
-
     // Encontrar o produto pelo ID
     const product = products.find((item) => item._id === itemId);
-
+  
     // Verificar se o produto foi encontrado
     if (!product) {
       console.log("Produto não encontrado", itemId);
       return;
     }
-
+  
+    // Verificar se o produto é da categoria "Roupas" e se o tamanho foi selecionado
+    if (product.categoria === "Roupas" && !size) {
+      toast.error("Por favor, selecione um tamanho antes de adicionar ao carrinho.");
+      return;
+    }
+  
+    // Clonando o estado atual do carrinho
+    let cartData = structuredClone(cartItems);
+  
     // Se o item já existe no carrinho
     if (cartData[itemId]) {
       // Se o tamanho já existe, incrementa a quantidade
@@ -53,19 +54,19 @@ const ShopContextProvider = (props) => {
         console.log(`Novo tamanho (${size}) adicionado ao carrinho para o produto ${product.nome}`);
       }
     } else {
-      // Se o item não está no carrinho, adiciona com o tamanho e quantidade 1
+      // Se o item não está no carrinho, adiciona com o tamanho (ou sem para outros itens) e quantidade 1
       cartData[itemId] = {};
-      cartData[itemId][size] = 1;
-      console.log(`Produto ${product.nome} adicionado ao carrinho com tamanho ${size}`);
+      cartData[itemId][size || "default"] = 1;
+      console.log(`Produto ${product.nome} adicionado ao carrinho com tamanho ${size || "default"}`);
     }
-
+  
     // Atualiza o estado do carrinho
     setCartItems(cartData);
-
+  
     // Altera o estado de cartUpdated para true e volta para false depois de 1 segundo
     setCartUpdated(true);
     setTimeout(() => setCartUpdated(false), 1000);
-
+  
     // Log do carrinho atualizado
     console.log("Carrinho atualizado:", cartData);
   };

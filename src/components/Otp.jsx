@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const CodeVerification = () => {
   const [code, setCode] = useState(['', '', '', '', '', '']);
   const [isResendEnabled, setIsResendEnabled] = useState(false);
   const [timer, setTimer] = useState(30);
   const [email, setEmail] = useState('');
+  const navigate = useNavigate(); // Para redirecionar
 
   useEffect(() => {
     const storedEmail = localStorage.getItem('userEmail');
@@ -44,6 +46,8 @@ const CodeVerification = () => {
       const data = await response.json();
       if (data.status === 200 || response.status === 201) {
         alert('Código verificado com sucesso!');
+        // Redireciona para a tela de login após sucesso
+        navigate('/login');
       } else {
         alert('Código inválido. Tente novamente.');
       }

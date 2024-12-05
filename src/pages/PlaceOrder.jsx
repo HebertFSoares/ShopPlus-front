@@ -24,6 +24,7 @@ const PlaceOrder = () => {
   const [qrCodeData, setQrCodeData] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isLoadingUserData, setIsLoadingUserData] = useState(true);  // Estado de carregamento dos dados
 
   const navigate = useNavigate();
 
@@ -71,6 +72,8 @@ const PlaceOrder = () => {
         }
       } catch (error) {
         alert('Houve um erro ao carregar os dados do cliente.');
+      } finally {
+        setIsLoadingUserData(false); // Dados carregados, desabilita o carregamento
       }
     };
 
@@ -148,7 +151,76 @@ const PlaceOrder = () => {
             <span className="text-purple-600">INFORMAÇÕES</span> DA ENTREGA
             <div className="border-t-2 border-purple-600 w-16"></div>
           </h1>
-          {/* Inputs de entrega omitidos para brevidade */}
+
+          {isLoadingUserData ? (
+            <p className="text-gray-500">Carregando informações do cliente...</p>
+          ) : (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Nome</label>
+                <input
+                  type="text"
+                  value={userData.firstName}
+                  readOnly
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Sobrenome</label>
+                <input
+                  type="text"
+                  value={userData.lastName}
+                  readOnly
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Email</label>
+                <input
+                  type="text"
+                  value={userData.email}
+                  readOnly
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Endereço</label>
+                <input
+                  type="text"
+                  value={userData.address}
+                  readOnly
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Cidade</label>
+                <input
+                  type="text"
+                  value={userData.city}
+                  readOnly
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Estado</label>
+                <input
+                  type="text"
+                  value={userData.state}
+                  readOnly
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">CEP</label>
+                <input
+                  type="text"
+                  value={userData.zipcode}
+                  readOnly
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Coluna: Resumo do Pedido */}

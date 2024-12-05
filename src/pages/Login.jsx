@@ -9,6 +9,7 @@ import SignUpMobile from "../pages/SignUpMobile"; // Importa o SignUpMobile
 export default function Login() {
   const [type, setType] = useState("signIn");
   const [isMobile, setIsMobile] = useState(false); // Estado para controlar a detecção do dispositivo
+  const [email, setEmail] = useState(''); // Estado para armazenar o email
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,6 +17,12 @@ export default function Login() {
     const token = localStorage.getItem("token");
     if (token) {
       navigate("/"); 
+    }
+
+    // Verifica o email armazenado no localStorage e o define no estado
+    const storedEmail = localStorage.getItem('userEmail');
+    if (storedEmail) {
+      setEmail(storedEmail); // Definir o email no estado
     }
   }, [navigate]);
 
@@ -60,7 +67,6 @@ export default function Login() {
         <span className="text-2xl">&lt;</span>
       </button>
 
-
       {/* Renderiza LoginMobile ou SignUpMobile para dispositivos móveis, ou os formulários para desktop */}
       {isMobile ? (
         type === "signUp" ? (
@@ -74,7 +80,11 @@ export default function Login() {
           {type === "signUp" ? (
             <SignUpForm id="sign-up-form" className="form sign-up-form" />
           ) : (
-            <SignInForm id="sign-in-form" className="form sign-in-form" />
+            <SignInForm 
+              id="sign-in-form" 
+              className="form sign-in-form"
+              email={email} // Passa o email para o SignInForm
+            />
           )}
 
           {/* Overlay exibido apenas em telas grandes */}

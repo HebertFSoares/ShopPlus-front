@@ -37,6 +37,23 @@ const Product = () => {
 
   const isClothing = productData.categoria === "Roupas";
 
+  const handleAddToCart = () => {
+    console.log("Produto:", productData); // Exibe os dados do produto
+    console.log("Tamanho selecionado:", size); // Exibe o tamanho selecionado
+    console.log("Categoria:", productData.categoria); // Exibe a categoria do produto
+  
+    // Verifica se o produto é uma roupa e se um tamanho foi selecionado
+    if (isClothing && !size) {
+      alert("Por favor, selecione um tamanho antes de adicionar ao carrinho.");
+      return;
+    }
+  
+    // Adiciona o produto ao carrinho, com o tamanho para roupas ou sem para outros itens
+    console.log("Adicionando ao carrinho com tamanho:", isClothing ? size : "N/A");
+    addToCart(productData._id, isClothing ? size : null);
+  };
+  
+  
   return (
     <div className="pt-20 px-4 md:px-8">
       {/* Conteúdo principal */}
@@ -93,7 +110,7 @@ const Product = () => {
           )}
 
           <button
-            onClick={() => addToCart(productData._id, size)}
+            onClick={handleAddToCart}
             className="mt-8 w-full bg-purple-600 text-white py-4 rounded-md text-lg font-semibold hover:bg-purple-700 transition-colors"
           >
             ADICIONAR AO CARRINHO
@@ -102,39 +119,38 @@ const Product = () => {
       </div>
 
       <div className="my-14">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800">
-          <span className="text-purple-600">MAIS</span> PRODUTOS
-        </h2>
-        <div className="mt-4 border-t-2 border-purple-600 w-16 mx-auto"></div>
-      </div>
-  
-  {/* Grid de Produtos Relacionados */}
-  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 px-4">
-    {relatedProducts.map((item) => (
-      <div
-        key={item._id}
-        className="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition duration-300 ease-in-out"
-      >
-        <img
-          src={item.foto}
-          alt={item.nome}
-          className="w-full h-56 sm:h-64 md:h-72 lg:h-80 object-cover"
-        />
-        <div className="p-4">
-          <h3 className="text-sm sm:text-base font-medium text-gray-800 truncate">{item.nome}</h3>
-          <p className="text-sm sm:text-base text-gray-500 mb-2">{item.categoria}</p>
-          <div className="flex items-center justify-between">
-            <p className="text-lg font-semibold text-gray-900">
-              R$ {item.preco.toFixed(2).replace('.', ',')}
-            </p>
-          </div>
+        <div className="text-center mb-8">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-800">
+            <span className="text-purple-600">MAIS</span> PRODUTOS
+          </h2>
+          <div className="mt-4 border-t-2 border-purple-600 w-16 mx-auto"></div>
+        </div>
+
+        {/* Grid de Produtos Relacionados */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 px-4">
+          {relatedProducts.map((item) => (
+            <div
+              key={item._id}
+              className="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition duration-300 ease-in-out"
+            >
+              <img
+                src={item.foto}
+                alt={item.nome}
+                className="w-full h-56 sm:h-64 md:h-72 lg:h-80 object-cover"
+              />
+              <div className="p-4">
+                <h3 className="text-sm sm:text-base font-medium text-gray-800 truncate">{item.nome}</h3>
+                <p className="text-sm sm:text-base text-gray-500 mb-2">{item.categoria}</p>
+                <div className="flex items-center justify-between">
+                  <p className="text-lg font-semibold text-gray-900">
+                    R$ {item.preco.toFixed(2).replace('.', ',')}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-    ))}
-  </div>
-</div>
-
     </div>
   );
 };
